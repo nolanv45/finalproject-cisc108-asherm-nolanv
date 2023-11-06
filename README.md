@@ -1,4 +1,8 @@
 **MOUNTAIN CLIMBER**
+
+Asher Mills: asherm@udel.edu
+
+Nolan Vasil: nolanv@udel.edu
 - Our game has the player **scale** a mountain and obtain a high score based on how high they climb. Players can gain 
 lives when they collide with randomly spawning hearts, but lose lives when colliding with boulders, falling down slightly. When
 player collides with the bottom of the screen, it is an instant game over and player ends with their current score. Camera will
