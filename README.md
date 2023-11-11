@@ -7,6 +7,9 @@ Asher Mills asherm@udel.edu
 lives when they collide with randomly spawning hearts, but lose lives when colliding with boulders, falling down slightly. When
 player collides with the bottom of the screen, it is an instant game over and player ends with their current score. Camera will
 move with the player as they climb up.
+**MILESTONE ONE VIDEO**
+https://youtu.be/RUUAag07Z7I
+
 - **PHASE 1**
 - [x] Have user exist on screen
 - [x] Allow user to change direction based on key input
