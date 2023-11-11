@@ -8,10 +8,12 @@ lives when they collide with randomly spawning hearts, but lose lives when colli
 player collides with the bottom of the screen, it is an instant game over and player ends with their current score. Camera will
 move with the player as they climb up.
 - **PHASE 1**
-- [ ] Have user exist on screen
-- [ ] Allow user to change direction based on key input
-- [ ] Camera follow user as they move up
-- [ ] Have background exist
+- [x] Have user exist on screen
+- [x] Allow user to change direction based on key input
+- [x] Have background exist
+- [x] Have background move down
+- [x] User falls down the screen if idle
+- [x] User flips with upward or downward movement input, and flips towards direction if moving left or right
 - **PHASE 2**
 - [ ] Have a heart count system, with user starting out with 3 lives
 - [ ] Have boulders spawn at the top of the screen
