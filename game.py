@@ -86,6 +86,16 @@ def player_move(world: World, key: str):
         move_down(world)
 
 
+def create_heart() -> DesignerObject:
+    heart = emoji("❤")
+    heart.x = randint(0, get_width())
+    heart.y = randint(0, -1 * get_height())
+    return heart
+
+def spawn_heart(world : World):
+
+
+
 when('starting', create_world)
 when('typing', player_move)
 when('updating', player_glide_down)
