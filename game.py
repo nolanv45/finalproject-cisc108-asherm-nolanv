@@ -85,9 +85,22 @@ def player_move(world: World, key: str):
     elif key == "down":
         move_down(world)
 
+def create_boulder():
+    boulder = emoji('🪨')
+    boulder.x = randint(0, get_width())
+    boulder.y = get_height() * -1
+    return boulder
+
+def spawn_boulders(world: World):
+    not_too_many_boulders = len(world.boulders) < get_width()
+    random_chance = randint(0,10) == 5
+    if not_too_many_boulders and random_chance:
+        world.boulders.append(create_boulder())
+
 
 when('starting', create_world)
 when('typing', player_move)
 when('updating', player_glide_down)
 when('updating', background_glide_down)
+when('updating', spawn_boulders)
 start()
