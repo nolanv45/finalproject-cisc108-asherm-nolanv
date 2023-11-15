@@ -23,7 +23,7 @@ https://youtu.be/RUUAag07Z7I
 - [X] Have hearts spawn at the top of the screen
 - [X] Have only three hearts can exist at a time
 - [ ] Have boulders move down the screen
-- [ ] Have hearts move down the screen
+- [X] Have hearts move down the screen
 - **PHASE 3**
 - [ ] When colliding with boulder, user loses a life
 - [ ] When colliding with boulder, user falls down slightly

@@ -4,7 +4,7 @@ from random import randint
 
 BOULDER_DROP_SPEED = 10
 set_window_color("blue")
-
+HEART_LIMIT = 3
 
 @dataclass
 class World:
@@ -51,6 +51,9 @@ def move_left(world: World):
 def player_glide_down(world: World):
     move_forward(world.player, .5, 270)
 
+def heart_glide_down(world: World):
+    for i in world.hearts:
+        move_forward(i, 3, 270)
 
 def move_right(world: World):
     world.player.flip_x = False
@@ -89,10 +92,18 @@ def player_move(world: World, key: str):
 def create_heart() -> DesignerObject:
     heart = emoji("❤")
     heart.x = randint(0, get_width())
-    heart.y = randint(0, -1 * get_height())
+    heart.y = 0
     return heart
 
-def spawn_heart(world : World):
+def spawn_heart(world: World):
+    if len(world.hearts) < HEART_LIMIT:
+        heart_chance = randint(1,200)
+        if heart_chance == 5:
+            world.hearts.append(create_heart())
+def heart_out_of_bounds(world: World):
+    for i in world.hearts:
+        if i.x == get_height():
+            world.hearts.pop(i)
 
 
 
@@ -100,4 +111,7 @@ when('starting', create_world)
 when('typing', player_move)
 when('updating', player_glide_down)
 when('updating', background_glide_down)
+when('updating', heart_glide_down)
+when('updating', destroy_heart)
+when('updating', spawn_heart)
 start()
