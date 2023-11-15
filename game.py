@@ -97,10 +97,15 @@ def spawn_boulders(world: World):
     if not_too_many_boulders and random_chance:
         world.boulders.append(create_boulder())
 
+def drop_boulders(world: World):
+    for boulder in world.boulders:
+        boulder.y += BOULDER_DROP_SPEED
+
 
 when('starting', create_world)
 when('typing', player_move)
 when('updating', player_glide_down)
 when('updating', background_glide_down)
 when('updating', spawn_boulders)
+when('updating', drop_boulders)
 start()
