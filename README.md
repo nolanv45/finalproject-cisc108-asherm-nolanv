@@ -20,7 +20,8 @@ https://youtu.be/RUUAag07Z7I
 - **PHASE 2**
 - [ ] Have a heart count system, with user starting out with 3 lives
 - [ ] Have boulders spawn at the top of the screen
-- [ ] Have hearts spawn at the top of the screen
+- [X] Have hearts spawn at the top of the screen
+- [X] Have only three hearts can exist at a time
 - [ ] Have boulders move down the screen
 - [ ] Have hearts move down the screen
 - **PHASE 3**
