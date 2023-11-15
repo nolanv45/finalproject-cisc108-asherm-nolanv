@@ -13,14 +13,17 @@ class World:
     boulders: list[DesignerObject]
     hearts: list[DesignerObject]
     score: int
+    player_lives: int
     score_counter: DesignerObject
+    heart_counter: DesignerObject
 
 
 def create_world() -> World:
     """ Create the world """
 
-    return World(create_background(), create_player(), [], [], 0,
-                 text("black", "Score: ", 20, get_width() / 2, 100, font_name="Arial"))
+    return World(create_background(), create_player(), [], [], 0, 3,
+                 text("black", "Score: ", 20, get_width() / 2, 100, font_name="Arial"),
+                 text("red", "Lives left: ", 30, get_width() / 2, 80, font_name="Arial"))
 
 
 def create_background() -> DesignerObject:
@@ -78,9 +81,7 @@ def move_down(world: World):
 
 def player_move(world: World, key: str):
     if key == "left":
-
         move_left(world)
-
     elif key == "right":
         move_right(world)
     elif key == "up":
@@ -109,10 +110,14 @@ def heart_out_of_bounds(world: World):
             print(world.hearts)
 
 
+def update_heart_counter(world: World):
+    """ Update the hearts """
+    world.heart_counter.text = "Lives left: " + str(world.player_lives)
 
 when('starting', create_world)
 when('typing', player_move)
 when('updating', player_glide_down)
+when('updating', update_heart_counter)
 when('updating', background_glide_down)
 when('updating', heart_glide_down)
 when('updating', heart_out_of_bounds)
