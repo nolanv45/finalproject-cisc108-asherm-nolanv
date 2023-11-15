@@ -100,10 +100,13 @@ def spawn_heart(world: World):
         heart_chance = randint(1,200)
         if heart_chance == 5:
             world.hearts.append(create_heart())
+
 def heart_out_of_bounds(world: World):
     for i in world.hearts:
-        if i.x == get_height():
-            world.hearts.pop(i)
+        if i.y > get_height():
+            destroy(i)
+            world.hearts.remove(i)
+            print(world.hearts)
 
 
 
@@ -112,6 +115,6 @@ when('typing', player_move)
 when('updating', player_glide_down)
 when('updating', background_glide_down)
 when('updating', heart_glide_down)
-when('updating', destroy_heart)
+when('updating', heart_out_of_bounds)
 when('updating', spawn_heart)
 start()

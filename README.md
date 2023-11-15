@@ -19,11 +19,12 @@ https://youtu.be/RUUAag07Z7I
 - [x] User flips with upward or downward movement input, and flips towards direction if moving left or right
 - **PHASE 2**
 - [ ] Have a heart count system, with user starting out with 3 lives
-- [ ] Have boulders spawn at the top of the screen
+- [X] Have boulders spawn at the top of the screen
 - [X] Have hearts spawn at the top of the screen
 - [X] Have only three hearts can exist at a time
-- [ ] Have boulders move down the screen
+- [X] Have boulders move down the screen
 - [X] Have hearts move down the screen
+- [X] Have hearts disappear when they hit the bottom of the screen
 - **PHASE 3**
 - [ ] When colliding with boulder, user loses a life
 - [ ] When colliding with boulder, user falls down slightly
