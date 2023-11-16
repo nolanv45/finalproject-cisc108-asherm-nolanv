@@ -55,8 +55,8 @@ def player_glide_down(world: World):
     move_forward(world.player, .5, 270)
 
 def heart_glide_down(world: World):
-    for i in world.hearts:
-        move_forward(i, 3, 270)
+    for heart in world.hearts:
+        move_forward(heart, 3, 270)
 
 def move_right(world: World):
     world.player.flip_x = False
@@ -103,11 +103,10 @@ def spawn_heart(world: World):
             world.hearts.append(create_heart())
 
 def heart_out_of_bounds(world: World):
-    for i in world.hearts:
-        if i.y > get_height():
-            destroy(i)
-            world.hearts.remove(i)
-            print(world.hearts)
+    for heart in world.hearts:
+        if heart.y > get_height():
+            destroy(heart)
+            world.hearts.remove(heart)
 
 
 def update_heart_counter(world: World):
