@@ -18,11 +18,12 @@ https://youtu.be/RUUAag07Z7I
 - [x] User falls down the screen if idle
 - [x] User flips with upward or downward movement input, and flips towards direction if moving left or right
 - **PHASE 2**
-- [ ] Have a heart count system, with user starting out with 3 lives
+- [X] Have a heart count system, with user starting out with 3 lives
 - [X] Have boulders spawn at the top of the screen
 - [X] Have hearts spawn at the top of the screen
 - [X] Have only three hearts can exist at a time
 - [X] Have boulders move down the screen
+- [X] Have boulders disappear when they hit the bottom of the screen
 - [X] Have hearts move down the screen
 - [X] Have hearts disappear when they hit the bottom of the screen
 - **PHASE 3**
@@ -31,4 +32,3 @@ https://youtu.be/RUUAag07Z7I
 - [ ] When colliding with hearts, user gains a life
 - [ ] When lives reach zero, user immediately falls to the bottom
 - [ ] When user collides with bottom screen, game over screen occurs
-- [ ] When game is over, final score appears

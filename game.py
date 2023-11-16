@@ -12,17 +12,14 @@ class World:
     player: DesignerObject
     boulders: list[DesignerObject]
     hearts: list[DesignerObject]
-    score: int
     player_lives: int
-    score_counter: DesignerObject
     heart_counter: DesignerObject
 
 
 def create_world() -> World:
     """ Create the world """
 
-    return World(create_background(), create_player(), [], [], 0, 3,
-                 text("black", "Score: ", 20, get_width() / 2, 100, font_name="Arial"),
+    return World(create_background(), create_player(), [], [], 3,
                  text("red", "Lives left: ", 30, get_width() / 2, 80, font_name="Arial"))
 
 
