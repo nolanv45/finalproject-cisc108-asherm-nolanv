@@ -93,14 +93,19 @@ def create_boulder():
 
 def spawn_boulders(world: World):
     not_too_many_boulders = len(world.boulders) < get_width()
-    random_chance = randint(0,10) == 5
-    if not_too_many_boulders and random_chance:
+    random_spawning = randint(0,10) == 5
+    if not_too_many_boulders and random_spawning:
         world.boulders.append(create_boulder())
 
 def drop_boulders(world: World):
     for boulder in world.boulders:
         boulder.y += BOULDER_DROP_SPEED
 
+def boulder_out_of_bounds(world: World):
+    for boulder in world.boulders:
+        if boulder.y > get_height():
+            destroy(boulder)
+            world.boulders.remove(boulder)
 
 when('starting', create_world)
 when('typing', player_move)
@@ -108,4 +113,5 @@ when('updating', player_glide_down)
 when('updating', background_glide_down)
 when('updating', spawn_boulders)
 when('updating', drop_boulders)
+when('updating', boulder_out_of_bounds)
 start()
