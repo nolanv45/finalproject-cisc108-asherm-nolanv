@@ -132,6 +132,20 @@ def boulder_out_of_bounds(world: World):
             destroy(boulder)
             world.boulders.remove(boulder)
 
+def update_lives(world):
+    """Updates player's lives"""
+    world.heart_counter.text = "Lives left: " + str(world.player_lives)
+
+
+def game_over_screen(world):
+    """Shows game over screen"""
+    world.background_image = rectangle('black', get_width(), get_height())
+    world.heart_counter = text('red',"GAME OVER!!!")
+
+def increase_timer():
+    clock = 0
+    clock += 1
+
 when('starting', create_world)
 when('typing', player_move)
 when('updating', player_glide_down)
@@ -143,4 +157,5 @@ when('updating', spawn_heart)
 when('updating', spawn_boulders)
 when('updating', drop_boulders)
 when('updating', boulder_out_of_bounds)
+when('updating', timer)
 start()
