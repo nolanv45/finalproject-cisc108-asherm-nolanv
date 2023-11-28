@@ -31,6 +31,8 @@ https://youtu.be/en_SOEax6no
 - [X] Have hearts disappear when they hit the bottom of the screen
 - **PHASE 3**
 - [ ] When colliding with boulder, user loses a life
+- [X] When colliding with boulder, the boulder disappears
+- [ ] When colliding with boulder, user becomes invincible for 2 seconds
 - [ ] When colliding with boulder, user falls down slightly
 - [ ] When colliding with hearts, user gains a life
 - [ ] When lives reach zero, user immediately falls to the bottom
