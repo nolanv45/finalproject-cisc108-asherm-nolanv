@@ -1,6 +1,7 @@
 from dataclasses import dataclass
-from designer import *
 from random import randint
+import time
+from designer import *
 
 BOULDER_DROP_SPEED = 10
 set_window_color("blue")
@@ -16,13 +17,14 @@ class World:
     player_lives: int
     heart_counter: DesignerObject
     invincible: bool
+    invincible_timer: int
 
 
 def create_world() -> World:
     """ Create the world """
 
     return World(create_background(), create_player(), [], [], 3,
-                 text("red", "Lives left: ", 30, get_width() / 2, 80, font_name="Arial"),False)
+                 text("red", "Lives left: ", 30, get_width() / 2, 80, font_name="Arial"),False, 0)
 
 
 def create_background() -> DesignerObject:
@@ -136,15 +138,26 @@ def boulder_out_of_bounds(world: World):
 
 
 def player_is_hurt(world: World):
-    world.invincible = True
+    invincible_function(world)
     move_forward(world.player, 25, 270)
+    world.player_lives -= 1
+    update_lives(world)
+
+def invincible_function(world: World):
+    world.invincible = True
     world.player.alpha = .5
 
+
+def is_invincible_timer_up(world:World):
+    if time.time() - world.invincible_timer > 1.5:
+        world.invincible = False
+        world.player.alpha = 1
 def boulder_collision(world: World):
     for boulder in world.boulders:
         if colliding(world.player, boulder) and not world.invincible:
             destroy(boulder)
             world.boulders.remove(boulder)
+            world.invincible_timer = time.time()
             player_is_hurt(world)
 
 
@@ -154,15 +167,29 @@ def update_lives(world):
     """Updates player's lives"""
     world.heart_counter.text = "Lives left: " + str(world.player_lives)
 
+def heart_collision(world: World):
+    if world.player_lives < 3:
+        for heart in world.hearts:
+            if colliding(world.player, heart):
+                destroy(heart)
+                world.hearts.remove(heart)
+                world.player_lives += 1
+                update_lives(world)
+
 
 def game_over_screen(world):
     """Shows game over screen"""
     world.background_image = rectangle('black', get_width(), get_height())
     world.heart_counter = text('red',"GAME OVER!!!")
 
-def increase_timer():
-    clock = 0
-    clock += 1
+def no_player_lives(world):
+    """Returns True if player's lives equals 0"""
+    if world.player_lives == 0:
+        return True
+
+def hits_bottom_screen(world):
+    if world.player.y >= get_height():
+        return True
 
 when('starting', create_world)
 when('typing', player_move)
@@ -176,5 +203,8 @@ when('updating', spawn_boulders)
 when('updating', drop_boulders)
 when('updating', boulder_out_of_bounds)
 when('updating', boulder_collision)
-when('updating', timer)
+when('updating', heart_collision)
+when('updating', is_invincible_timer_up)
+when(no_player_lives, game_over_screen, pause)
+when(hits_bottom_screen, game_over_screen, pause)
 start()
