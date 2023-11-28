@@ -6,6 +6,7 @@ BOULDER_DROP_SPEED = 10
 set_window_color("blue")
 HEART_LIMIT = 3
 
+
 @dataclass
 class World:
     background_image: DesignerObject
@@ -14,13 +15,14 @@ class World:
     hearts: list[DesignerObject]
     player_lives: int
     heart_counter: DesignerObject
+    invincible: bool
 
 
 def create_world() -> World:
     """ Create the world """
 
     return World(create_background(), create_player(), [], [], 3,
-                 text("red", "Lives left: ", 30, get_width() / 2, 80, font_name="Arial"))
+                 text("red", "Lives left: ", 30, get_width() / 2, 80, font_name="Arial"),False)
 
 
 def create_background() -> DesignerObject:
@@ -132,6 +134,22 @@ def boulder_out_of_bounds(world: World):
             destroy(boulder)
             world.boulders.remove(boulder)
 
+
+def player_is_hurt(world: World):
+    world.invincible = True
+    move_forward(world.player, 25, 270)
+    world.player.alpha = .5
+
+def boulder_collision(world: World):
+    for boulder in world.boulders:
+        if colliding(world.player, boulder) and not world.invincible:
+            destroy(boulder)
+            world.boulders.remove(boulder)
+            player_is_hurt(world)
+
+
+
+
 def update_lives(world):
     """Updates player's lives"""
     world.heart_counter.text = "Lives left: " + str(world.player_lives)
@@ -157,5 +175,6 @@ when('updating', spawn_heart)
 when('updating', spawn_boulders)
 when('updating', drop_boulders)
 when('updating', boulder_out_of_bounds)
+when('updating', boulder_collision)
 when('updating', timer)
 start()
