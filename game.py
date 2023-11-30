@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from random import randint
+import random
 import time
 from designer import *
 
@@ -102,13 +102,13 @@ def player_move(world: World, key: str):
 
 def create_heart() -> DesignerObject:
     heart = emoji("❤")
-    heart.x = randint(0, get_width())
+    heart.x = random.randint(0, get_width())
     heart.y = 0
     return heart
 
 def spawn_heart(world: World):
     if len(world.hearts) < HEART_LIMIT:
-        heart_chance = randint(1,200)
+        heart_chance = random.randint(1,200)
         if heart_chance == 5:
             world.hearts.append(create_heart())
 
@@ -124,16 +124,16 @@ def update_heart_counter(world: World):
     world.heart_counter.text = "Lives left: " + str(world.player_lives)
 
 def create_boulder():
-    new_boulder = Boulder(emoji('🪨'), randint(5,12))
+    new_boulder = Boulder(emoji('🪨'), random.randint(5,10))
 
-    new_boulder.boulder_object.x = randint(0, get_width())
+    new_boulder.boulder_object.x = random.randint(0, get_width())
     new_boulder.boulder_object.y = get_height() * -1
-    new_boulder.boulder_object.scale_y = randint(5,10)
+    new_boulder.boulder_object.scale = (random.random() + 1)
     return new_boulder
 
 def spawn_boulders(world: World):
     not_too_many_boulders = len(world.boulders) < get_width()
-    random_spawning = randint(0,10) == 5
+    random_spawning = random.randint(0,10) == 5
     if not_too_many_boulders and random_spawning:
         world.boulders.append(create_boulder())
 
@@ -144,7 +144,7 @@ def drop_boulders(world: World):
 def boulder_out_of_bounds(world: World):
     for boulder in world.boulders:
         if boulder.boulder_object.y > get_height():
-            destroy(boulder)
+            destroy(boulder.boulder_object)
             world.boulders.remove(boulder)
 
 
@@ -166,7 +166,7 @@ def is_invincible_timer_up(world:World):
 def boulder_collision(world: World):
     for boulder in world.boulders:
         if colliding(world.player, boulder.boulder_object) and not world.invincible:
-            destroy(boulder)
+            destroy(boulder.boulder_object)
             world.boulders.remove(boulder)
             world.invincible_timer = time.time()
             player_is_hurt(world)
