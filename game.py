@@ -9,22 +9,31 @@ HEART_LIMIT = 3
 
 
 @dataclass
+class Boulder:
+    boulder_object: DesignerObject
+    speed: int
+
+
+@dataclass
 class World:
     background_image: DesignerObject
     player: DesignerObject
-    boulders: list[DesignerObject]
+    boulders: list[Boulder]
     hearts: list[DesignerObject]
     player_lives: int
     heart_counter: DesignerObject
     invincible: bool
     invincible_timer: int
+    elapsed_game_timer: DesignerObject
+    game_start_time: int
+
 
 
 def create_world() -> World:
     """ Create the world """
 
     return World(create_background(), create_player(), [], [], 3,
-                 text("red", "Lives left: ", 30, get_width() / 2, 80, font_name="Arial"),False, 0)
+                 text("red", "Lives left: ", 30, get_width() / 2, 80, font_name="Arial"),False, 0, text("blue", "Time played: ", 30, get_width() / 2, 50, font_name="Arial"), time.time())
 
 
 def create_background() -> DesignerObject:
@@ -115,10 +124,12 @@ def update_heart_counter(world: World):
     world.heart_counter.text = "Lives left: " + str(world.player_lives)
 
 def create_boulder():
-    boulder = emoji('🪨')
-    boulder.x = randint(0, get_width())
-    boulder.y = get_height() * -1
-    return boulder
+    new_boulder = Boulder(emoji('🪨'), randint(5,12))
+
+    new_boulder.boulder_object.x = randint(0, get_width())
+    new_boulder.boulder_object.y = get_height() * -1
+    new_boulder.boulder_object.scale_y = randint(5,10)
+    return new_boulder
 
 def spawn_boulders(world: World):
     not_too_many_boulders = len(world.boulders) < get_width()
@@ -128,11 +139,11 @@ def spawn_boulders(world: World):
 
 def drop_boulders(world: World):
     for boulder in world.boulders:
-        boulder.y += BOULDER_DROP_SPEED
+        boulder.boulder_object.y += boulder.speed
 
 def boulder_out_of_bounds(world: World):
     for boulder in world.boulders:
-        if boulder.y > get_height():
+        if boulder.boulder_object.y > get_height():
             destroy(boulder)
             world.boulders.remove(boulder)
 
@@ -154,7 +165,7 @@ def is_invincible_timer_up(world:World):
         world.player.alpha = 1
 def boulder_collision(world: World):
     for boulder in world.boulders:
-        if colliding(world.player, boulder) and not world.invincible:
+        if colliding(world.player, boulder.boulder_object) and not world.invincible:
             destroy(boulder)
             world.boulders.remove(boulder)
             world.invincible_timer = time.time()
@@ -177,19 +188,23 @@ def heart_collision(world: World):
                 update_lives(world)
 
 
-def game_over_screen(world):
+def game_over_screen(world: World):
     """Shows game over screen"""
     world.background_image = rectangle('black', get_width(), get_height())
     world.heart_counter = text('red',"GAME OVER!!!")
 
-def no_player_lives(world):
+def no_player_lives(world: World):
     """Returns True if player's lives equals 0"""
     if world.player_lives == 0:
         return True
 
-def hits_bottom_screen(world):
+def hits_bottom_screen(world: World):
     if world.player.y >= get_height():
         return True
+def game_timer(world: World):
+    elapsed_time = (time.time() - world.game_start_time) // 1
+    world.elapsed_game_timer.text = 'Time played: ' + (str(elapsed_time))
+
 
 when('starting', create_world)
 when('typing', player_move)
@@ -205,6 +220,7 @@ when('updating', boulder_out_of_bounds)
 when('updating', boulder_collision)
 when('updating', heart_collision)
 when('updating', is_invincible_timer_up)
+when('updating', game_timer)
 when(no_player_lives, game_over_screen, pause)
 when(hits_bottom_screen, game_over_screen, pause)
 start()
