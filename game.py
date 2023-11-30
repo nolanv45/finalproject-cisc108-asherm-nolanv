@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from designer import *
 from random import randint
 import time
 from designer import *
@@ -48,8 +49,9 @@ def create_player() -> DesignerObject:
 
 
 def move_left(world: World):
-    world.player.flip_x = True
-    move_forward(world.player, 15, 180)
+    if world.player.x > 20:
+        world.player.flip_x = True
+        move_forward(world.player, 15, 180)
 
 
 def player_glide_down(world: World):
@@ -60,16 +62,18 @@ def heart_glide_down(world: World):
         move_forward(heart, 3, 270)
 
 def move_right(world: World):
-    world.player.flip_x = False
-    move_forward(world.player, 15, 0)
+    if world.player.x < get_width()-20:
+        world.player.flip_x = False
+        move_forward(world.player, 15, 0)
 
 
 def move_up(world: World):
-    if world.player.flip_x == False:
-        world.player.flip_x = True
-    elif world.player.flip_x == True:
-        world.player.flip_x = False
-    move_forward(world.player, 15, 90)
+    if world.player.y > 20:
+        if world.player.flip_x == False:
+            world.player.flip_x = True
+        elif world.player.flip_x == True:
+            world.player.flip_x = False
+        move_forward(world.player, 15, 90)
 
 
 def move_down(world: World):
@@ -163,7 +167,7 @@ def boulder_collision(world: World):
 
 
 
-def update_lives(world):
+def update_lives(world: World):
     """Updates player's lives"""
     world.heart_counter.text = "Lives left: " + str(world.player_lives)
 
@@ -177,19 +181,28 @@ def heart_collision(world: World):
                 update_lives(world)
 
 
-def game_over_screen(world):
+def game_over_screen(world: World):
     """Shows game over screen"""
     world.background_image = rectangle('black', get_width(), get_height())
-    world.heart_counter = text('red',"GAME OVER!!!")
-
-def no_player_lives(world):
+    game_over_text = text('yellow',"GAME OVER!!!", 100, get_width()/2, get_height()/2, font_name="Impact")
+    return game_over_text
+def no_player_lives(world: World):
     """Returns True if player's lives equals 0"""
     if world.player_lives == 0:
         return True
 
-def hits_bottom_screen(world):
+def hits_bottom_screen(world: World):
     if world.player.y >= get_height():
         return True
+
+def return_to_origin(world: World):
+    if world.background_image.y == 1000:
+        world.background_image.y = -400
+        return World(world.background_image, world.player, world.boulders, world.hearts, world.player_lives,
+                 world.heart_counter, world.invincible, world.invincible_timer)
+
+
+
 
 when('starting', create_world)
 when('typing', player_move)
@@ -207,4 +220,5 @@ when('updating', heart_collision)
 when('updating', is_invincible_timer_up)
 when(no_player_lives, game_over_screen, pause)
 when(hits_bottom_screen, game_over_screen, pause)
+when('updating', return_to_origin)
 start()
