@@ -1,6 +1,5 @@
 from dataclasses import dataclass
-from designer import *
-from random import randint
+import random
 import time
 from designer import *
 
@@ -10,22 +9,31 @@ HEART_LIMIT = 3
 
 
 @dataclass
+class Boulder:
+    boulder_object: DesignerObject
+    speed: int
+
+
+@dataclass
 class World:
     background_image: DesignerObject
     player: DesignerObject
-    boulders: list[DesignerObject]
+    boulders: list[Boulder]
     hearts: list[DesignerObject]
     player_lives: int
     heart_counter: DesignerObject
     invincible: bool
     invincible_timer: int
+    elapsed_game_timer: DesignerObject
+    game_start_time: int
+
 
 
 def create_world() -> World:
     """ Create the world """
 
     return World(create_background(), create_player(), [], [], 3,
-                 text("red", "Lives left: ", 30, get_width() / 2, 80, font_name="Arial"),False, 0)
+                 text("red", "Lives left: ", 30, get_width() / 2, 80, font_name="Arial"),False, 0, text("blue", "Time played: ", 30, get_width() / 2, 50, font_name="Arial"), time.time())
 
 
 def create_background() -> DesignerObject:
@@ -97,13 +105,13 @@ def player_move(world: World, key: str):
 
 def create_heart() -> DesignerObject:
     heart = emoji("❤")
-    heart.x = randint(0, get_width())
+    heart.x = random.randint(0, get_width())
     heart.y = 0
     return heart
 
 def spawn_heart(world: World):
     if len(world.hearts) < HEART_LIMIT:
-        heart_chance = randint(1,200)
+        heart_chance = random.randint(1,200)
         if heart_chance == 5:
             world.hearts.append(create_heart())
 
@@ -119,25 +127,27 @@ def update_heart_counter(world: World):
     world.heart_counter.text = "Lives left: " + str(world.player_lives)
 
 def create_boulder():
-    boulder = emoji('🪨')
-    boulder.x = randint(0, get_width())
-    boulder.y = get_height() * -1
-    return boulder
+    new_boulder = Boulder(emoji('🪨'), random.randint(5,10))
+
+    new_boulder.boulder_object.x = random.randint(0, get_width())
+    new_boulder.boulder_object.y = get_height() * -1
+    new_boulder.boulder_object.scale = (random.random() + 1)
+    return new_boulder
 
 def spawn_boulders(world: World):
     not_too_many_boulders = len(world.boulders) < get_width()
-    random_spawning = randint(0,10) == 5
+    random_spawning = random.randint(0,10) == 5
     if not_too_many_boulders and random_spawning:
         world.boulders.append(create_boulder())
 
 def drop_boulders(world: World):
     for boulder in world.boulders:
-        boulder.y += BOULDER_DROP_SPEED
+        boulder.boulder_object.y += boulder.speed
 
 def boulder_out_of_bounds(world: World):
     for boulder in world.boulders:
-        if boulder.y > get_height():
-            destroy(boulder)
+        if boulder.boulder_object.y > get_height():
+            destroy(boulder.boulder_object)
             world.boulders.remove(boulder)
 
 
@@ -158,8 +168,8 @@ def is_invincible_timer_up(world:World):
         world.player.alpha = 1
 def boulder_collision(world: World):
     for boulder in world.boulders:
-        if colliding(world.player, boulder) and not world.invincible:
-            destroy(boulder)
+        if colliding(world.player, boulder.boulder_object) and not world.invincible:
+            destroy(boulder.boulder_object)
             world.boulders.remove(boulder)
             world.invincible_timer = time.time()
             player_is_hurt(world)
@@ -194,6 +204,10 @@ def no_player_lives(world: World):
 def hits_bottom_screen(world: World):
     if world.player.y >= get_height():
         return True
+def game_timer(world: World):
+    elapsed_time = (time.time() - world.game_start_time) // 1
+    world.elapsed_game_timer.text = 'Time played: ' + (str(elapsed_time))
+
 
 def return_to_origin(world: World):
     if world.background_image.y == 1000:
@@ -218,6 +232,7 @@ when('updating', boulder_out_of_bounds)
 when('updating', boulder_collision)
 when('updating', heart_collision)
 when('updating', is_invincible_timer_up)
+when('updating', game_timer)
 when(no_player_lives, game_over_screen, pause)
 when(hits_bottom_screen, game_over_screen, pause)
 when('updating', return_to_origin)
