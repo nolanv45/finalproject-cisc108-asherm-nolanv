@@ -3,16 +3,14 @@ import random
 import time
 from designer import *
 
-BOULDER_DROP_SPEED = 10
 set_window_color("blue")
 HEART_LIMIT = 3
-
+high_score = 0
 
 @dataclass
 class Boulder:
     boulder_object: DesignerObject
     speed: int
-
 
 @dataclass
 class World:
@@ -21,6 +19,7 @@ class World:
     boulders: list[Boulder]
     hearts: list[DesignerObject]
     player_lives: int
+    counter_box_outline: DesignerObject
     heart_counter: DesignerObject
     invincible: bool
     invincible_timer: int
@@ -28,13 +27,21 @@ class World:
     game_start_time: int
 
 
+@dataclass
+class GameOverScreen:
+    background_image : DesignerObject
+    game_over_text : DesignerObject
+    play_again_text : DesignerObject
+    high_score_text: DesignerObject
+
 
 def create_world() -> World:
     """ Create the world """
 
     return World(create_background(), create_player(), [], [], 3,
-                 text("red", "Lives left: ", 30, get_width() / 2, 80, font_name="Arial"),False, 0, text("blue", "Time played: ", 30, get_width() / 2, 50, font_name="Arial"), time.time())
-
+                 rectangle('white', 300, 60, y= 65, anchor='center'),
+                 text("red", "Lives left: ", 30, get_width() / 2, 80, font_name="Arial"),False, 0,
+                 text("blue", "Time played: ", 30, get_width() / 2, 50, font_name="Arial"), time.time())
 
 def create_background() -> DesignerObject:
     background = image("https://as2.ftcdn.net/v2/jpg/01/61/99/47/1000_F_161994703_AgIEG3T74954bRN8HQRw5VtFsh16TmuU.jpg")
@@ -42,7 +49,6 @@ def create_background() -> DesignerObject:
     background.scale_x = 1.5
     background.y = -400
     return background
-
 
 def background_glide_down(world: World):
     move_forward(world.background_image, 0.5, 270)
@@ -175,8 +181,6 @@ def boulder_collision(world: World):
             player_is_hurt(world)
 
 
-
-
 def update_lives(world: World):
     """Updates player's lives"""
     world.heart_counter.text = "Lives left: " + str(world.player_lives)
@@ -191,19 +195,27 @@ def heart_collision(world: World):
                 update_lives(world)
 
 
-def game_over_screen(world: World):
+def create_game_over_screen(new_score:float):
     """Shows game over screen"""
-    world.background_image = rectangle('black', get_width(), get_height())
-    game_over_text = text('yellow',"GAME OVER!!!", 100, get_width()/2, get_height()/2, font_name="Impact")
-    return game_over_text
+    global high_score
+    if new_score > high_score:
+        high_score = new_score
+    return GameOverScreen(rectangle('black', get_width(), get_height()),text('yellow',"GAME OVER!!!", 100, get_width()/2, get_height()/2, font_name="Impact"),
+                          text('yellow',"Press Space to Play Again!", 50, get_width()/2, get_height()/1.5, font_name="Arial"),
+                          text('yellow',"High Score: " + str(high_score), 50, get_width()/2, get_height()/1.3, font_name="Arial"))
+
+
 def no_player_lives(world: World):
     """Returns True if player's lives equals 0"""
     if world.player_lives == 0:
-        return True
+        new_score = (time.time() - world.game_start_time) // 1
+        change_scene('game_over', new_score=new_score)
 
 def hits_bottom_screen(world: World):
     if world.player.y >= get_height():
-        return True
+        new_score = (time.time() - world.game_start_time) // 1
+        change_scene('game_over', new_score=new_score)
+
 def game_timer(world: World):
     elapsed_time = (time.time() - world.game_start_time) // 1
     world.elapsed_game_timer.text = 'Time played: ' + (str(elapsed_time))
@@ -213,27 +225,31 @@ def return_to_origin(world: World):
     if world.background_image.y == 1000:
         world.background_image.y = -400
         return World(world.background_image, world.player, world.boulders, world.hearts, world.player_lives,
-                 world.heart_counter, world.invincible, world.invincible_timer)
+                 world.heart_counter, world.invincible, world.invincible_timer, world.elapsed_game_timer, world.game_start_time, world.high_score)
 
+def restart(world: World, key: str):
+   # if no_player_lives(world) or hits_bottom_screen(world):
+        if key == "space":
+            push_scene('game')
 
-
-
-when('starting', create_world)
-when('typing', player_move)
-when('updating', player_glide_down)
-when('updating', update_heart_counter)
-when('updating', background_glide_down)
-when('updating', heart_glide_down)
-when('updating', heart_out_of_bounds)
-when('updating', spawn_heart)
-when('updating', spawn_boulders)
-when('updating', drop_boulders)
-when('updating', boulder_out_of_bounds)
-when('updating', boulder_collision)
-when('updating', heart_collision)
-when('updating', is_invincible_timer_up)
-when('updating', game_timer)
-when(no_player_lives, game_over_screen, pause)
-when(hits_bottom_screen, game_over_screen, pause)
-when('updating', return_to_origin)
+when('starting: game', create_world)
+when('typing: game', player_move)
+when('updating: game', player_glide_down)
+when('updating: game', update_heart_counter)
+when('updating: game', background_glide_down)
+when('updating: game', heart_glide_down)
+when('updating: game', heart_out_of_bounds)
+when('updating: game', spawn_heart)
+when('updating: game', spawn_boulders)
+when('updating: game', drop_boulders)
+when('updating: game', boulder_out_of_bounds)
+when('updating: game', boulder_collision)
+when('updating: game', heart_collision)
+when('updating: game', is_invincible_timer_up)
+when('updating: game', game_timer)
+when('updating: game', no_player_lives)
+when('updating: game', hits_bottom_screen)
+when('starting: game_over', create_game_over_screen)
+when('updating: game', return_to_origin)
+when('typing: game_over', restart)
 start()
