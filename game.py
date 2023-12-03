@@ -7,10 +7,12 @@ set_window_color("blue")
 HEART_LIMIT = 2
 high_score = 0
 
+
 @dataclass
 class Boulder:
     boulder_object: DesignerObject
     speed: int
+
 
 @dataclass
 class World:
@@ -22,26 +24,26 @@ class World:
     counter_box_outline: DesignerObject
     heart_counter: DesignerObject
     invincible: bool
-    invincible_timer: int
+    invincible_timer: float
     elapsed_game_timer: DesignerObject
-    game_start_time: int
+    game_start_time: float
 
 
 @dataclass
 class GameOverScreen:
-    background_image : DesignerObject
-    game_over_text : DesignerObject
-    play_again_text : DesignerObject
+    background_image: DesignerObject
+    game_over_text: DesignerObject
+    play_again_text: DesignerObject
     high_score_text: DesignerObject
 
 
 def create_world() -> World:
     """ Create the world """
 
-    return World(create_background(), create_player(), [], [], 3,
-                 rectangle('white', 300, 60, y= 65, anchor='center'),
-                 text("red", "Lives left: ", 30, get_width() / 2, 80, font_name="Arial"),False, 0,
+    return World(create_background(), create_player(), [], [], 3, rectangle('white', 300, 60, y=65, anchor='center'),
+                 text("red", "Lives left: ", 30, get_width() / 2, 80, font_name="Arial"), False, 0,
                  text("blue", "Time played: ", 30, get_width() / 2, 50, font_name="Arial"), time.time())
+
 
 def create_background() -> DesignerObject:
     """ Creates terrain in background of game """
@@ -50,6 +52,7 @@ def create_background() -> DesignerObject:
     background.scale_x = 1.5
     background.y = -400
     return background
+
 
 def background_glide_down(world: World):
     """ Constantly brings background down to make it look like player is falling """
@@ -75,6 +78,7 @@ def move_left(world: World):
 def player_glide_down(world: World):
     """ Have player constantly move down """
     move_forward(world.player, .5, 270)
+
 
 def heart_glide_down(world: World):
     """ Makes hearts fall down the screen """
