@@ -4,7 +4,7 @@ import time
 from designer import *
 
 set_window_color("blue")
-HEART_LIMIT = 3
+HEART_LIMIT = 2
 high_score = 0
 
 @dataclass
@@ -25,7 +25,6 @@ class World:
     invincible_timer: int
     elapsed_game_timer: DesignerObject
     game_start_time: int
-
 
 @dataclass
 class GameOverScreen:
@@ -132,7 +131,7 @@ def update_heart_counter(world: World):
     """ Update the hearts """
     world.heart_counter.text = "Lives left: " + str(world.player_lives)
 
-def create_boulder():
+def create_boulder() -> Boulder:
     new_boulder = Boulder(emoji('🪨'), random.randint(5,10))
 
     new_boulder.boulder_object.x = random.randint(0, get_width())
@@ -195,11 +194,12 @@ def heart_collision(world: World):
                 update_lives(world)
 
 
-def create_game_over_screen(new_score:float):
+def create_game_over_screen(new_score : float) -> GameOverScreen:
     """Shows game over screen"""
     global high_score
     if new_score > high_score:
         high_score = new_score
+
     return GameOverScreen(rectangle('black', get_width(), get_height()),text('yellow',"GAME OVER!!!", 100, get_width()/2, get_height()/2, font_name="Impact"),
                           text('yellow',"Press Space to Play Again!", 50, get_width()/2, get_height()/1.5, font_name="Arial"),
                           text('yellow',"High Score: " + str(high_score), 50, get_width()/2, get_height()/1.3, font_name="Arial"))
@@ -221,16 +221,16 @@ def game_timer(world: World):
     world.elapsed_game_timer.text = 'Time played: ' + (str(elapsed_time))
 
 
-def return_to_origin(world: World):
+def return_to_origin(world: World) -> World:
     if world.background_image.y == 1000:
         world.background_image.y = -400
         return World(world.background_image, world.player, world.boulders, world.hearts, world.player_lives,
-                 world.heart_counter, world.invincible, world.invincible_timer, world.elapsed_game_timer, world.game_start_time, world.high_score)
+                 world.heart_counter, world.invincible, world.invincible_timer, world.elapsed_game_timer, world.game_start_time)
 
-def restart(world: World, key: str):
-   # if no_player_lives(world) or hits_bottom_screen(world):
-        if key == "space":
-            push_scene('game')
+def restart(key: str):
+    if key == "space":
+        push_scene('game')
+
 
 when('starting: game', create_world)
 when('typing: game', player_move)
