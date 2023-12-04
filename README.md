@@ -43,11 +43,11 @@ Asher Mills asherm@udel.edu
 
 **ACKNOWLEDGEMENTS**:
 
-Designer Tutorial and Documentation: https://designer-edu.github.io/designer/students/docs.html
-Time Module Tutorial: https://docs.python.org/3/library/time.html
-Firefighter Game: https://designer-edu.github.io/designer/examples/firefighter.html
-Background Image: https://stock.adobe.com/images/shale-cliff/161994703
-Player Image: https://www.istockphoto.com/vector/boy-rock-climber-character-back-view-of-cute-redhead-kid-climbing-wall-boy-doing-gm1302196422-394008014
+- Designer Tutorial and Documentation: https://designer-edu.github.io/designer/students/docs.html
+- Time Module Tutorial: https://docs.python.org/3/library/time.html
+- Firefighter Game: https://designer-edu.github.io/designer/examples/firefighter.html
+- Background Image: https://stock.adobe.com/images/shale-cliff/161994703
+- Player Image: https://www.istockphoto.com/vector/boy-rock-climber-character-back-view-of-cute-redhead-kid-climbing-wall-boy-doing-gm1302196422-394008014
 
 **TASK LIST**:
 
