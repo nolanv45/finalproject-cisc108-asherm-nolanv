@@ -47,7 +47,8 @@ def create_world() -> World:
 
 def create_background() -> DesignerObject:
     """ Creates terrain in background of game """
-    background = image("https://as2.ftcdn.net/v2/jpg/01/61/99/47/1000_F_161994703_AgIEG3T74954bRN8HQRw5VtFsh16TmuU.jpg")
+    background = image("https://as2.ftcdn.net/v2/jpg/01/61/99/"
+                       "47/1000_F_161994703_AgIEG3T74954bRN8HQRw5VtFsh16TmuU.jpg")
     background.scale_y = 2
     background.scale_x = 1.5
     background.y = -400
@@ -87,15 +88,25 @@ def heart_glide_down(world: World):
 
 
 def move_right(world: World):
-    """ Helper function that allows player to move right so long as they are not on the right edge of the screen """
+    """ Helper function that allows player to move right
+     so long as they are not on the right edge of the screen """
     if world.player.x < get_width()-20:
         world.player.flip_x = False
         move_forward(world.player, 15, 0)
 
 
+def move_left(world: World):
+    """ Helper function that allows player to move left
+     so long as they are not on the left edge of the screen """
+    if world.player.x > 20:
+        world.player.flip_x = True
+        move_forward(world.player, 15, 180)
+
+
 def move_up(world: World):
-    """ Helper function that allows player to move up so long as they are not at the top of the screen. Also
-    makes player image flip to create the illusion of player climbing upwards
+    """ Helper function that allows player to move
+    up so long as they are not at the top of the screen.
+    Also makes player image flip to create the illusion of player climbing upwards.
     """
     if world.player.y > 20:
         if world.player.flip_x is False:
@@ -106,7 +117,8 @@ def move_up(world: World):
 
 
 def move_down(world: World):
-    """ Helper function that allows player to move down. Also makes player image flip to create the illusion of
+    """ Helper function that allows player to move down.
+    Also makes player image flip to create the illusion of
     player climbing downwards
     """
     if world.player.flip_x is False:
@@ -190,7 +202,8 @@ def boulder_out_of_bounds(world: World):
 
 
 def player_is_hurt(world: World):
-    """ Decreases the player's lives if they are hit by a boulder and pushes them down """
+    """ Decreases the player's lives if they are
+    hit by a boulder and pushes them down """
     invincible_function(world)
     move_forward(world.player, 25, 270)
     world.player_lives -= 1
@@ -198,13 +211,15 @@ def player_is_hurt(world: World):
 
 
 def invincible_function(world: World):
-    """ Makes the player invincible and transparent for a short time after being hit by a boulder """
+    """ Makes the player invincible and transparent
+    for a short time after being hit by a boulder """
     world.invincible = True
     world.player.alpha = .5
 
 
 def is_invincible_timer_up(world: World):
-    """ Helper function that tests if the player has been invincible for more than 1.5 seconds """
+    """ Helper function that tests if the player has been
+    invincible for more than 1.5 seconds """
     if time.time() - world.invincible_timer > 1.5:
         world.invincible = False
         world.player.alpha = 1
@@ -226,8 +241,8 @@ def update_lives(world: World):
 
 
 def heart_collision(world: World):
-    """ Makes heart disappear once it collides with player, and updates player's lives so long as
-    they have less than 3 lives
+    """ Makes heart disappear once it collides with player,
+    and updates player's lives so long as they have less than 3 lives
     """
     if world.player_lives < 3:
         for heart in world.hearts:
@@ -268,15 +283,16 @@ def hits_bottom_screen(world: World):
 def game_timer(world: World):
     """ Creates game timer """
     elapsed_time = (time.time() - world.game_start_time) // 1
-    world.elapsed_game_timer.text = 'Time played: ' + (str(elapsed_time))
+    world.elapsed_game_timer.text = 'Time played: ' + (str(round(elapsed_time)))
 
 
 def return_to_origin(world: World) -> World:
     """ Resets the background screen when the player reaches the top of the image """
     if world.background_image.y == 1000:
         world.background_image.y = -400
-        return World(world.background_image, world.player, world.boulders, world.hearts, world.player_lives,
-                     world.counter_box_outline, world.heart_counter, world.invincible, world.invincible_timer,
+        return World(world.background_image, world.player, world.boulders,
+                     world.hearts, world.player_lives, world.counter_box_outline,
+                 world.heart_counter, world.invincible, world.invincible_timer,
                      world.elapsed_game_timer, world.game_start_time)
 
 

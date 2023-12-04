@@ -1,12 +1,11 @@
-Title:
-**MOUNTAIN CLIMBER**
+**Title**:
+MOUNTAIN CLIMBER
 
 
 **DESCRIPTION**:
-- Our game is a scroller where the player is climbing a mountain and must dodge obstacles along the way with the goal of surviving for as long as possible.
+- Our game has a player climbing a mountain and must dodge obstacles along the way with the goal of surviving for as long as possible.
 
 **ABOUT**:
-
 - Our game has the player **scale** a mountain and obtain a high score based on how high they climb. Players can gain 
 lives when they collide with randomly spawning hearts, but lose lives when colliding with boulders, falling down slightly. When
 player collides with the bottom of the screen, it is an instant game over and player ends with their current score. Camera will
@@ -20,6 +19,9 @@ https://youtu.be/RUUAag07Z7I
 
 Milestone Two Video:
 https://youtu.be/en_SOEax6no
+
+Final Product Video:
+https://youtu.be/1casHMEsztk
 
 **INSTRUCTIONS**:
 
@@ -44,10 +46,10 @@ Asher Mills asherm@udel.edu
 Designer Tutorial and Documentation: https://designer-edu.github.io/designer/students/docs.html
 Time Module Tutorial: https://docs.python.org/3/library/time.html
 Firefighter Game: https://designer-edu.github.io/designer/examples/firefighter.html
-
+Background Image: https://stock.adobe.com/images/shale-cliff/161994703
+Player Image: https://www.istockphoto.com/vector/boy-rock-climber-character-back-view-of-cute-redhead-kid-climbing-wall-boy-doing-gm1302196422-394008014
 
 **TASK LIST**:
-
 
 - **PHASE 1**
 - [x] Have user exist on screen
