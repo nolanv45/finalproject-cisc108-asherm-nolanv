@@ -85,6 +85,7 @@ def heart_glide_down(world: World):
     for heart in world.hearts:
         move_forward(heart, 3, 270)
 
+
 def move_right(world: World):
     """ Helper function that allows player to move right so long as they are not on the right edge of the screen """
     if world.player.x < get_width()-20:
@@ -97,9 +98,9 @@ def move_up(world: World):
     makes player image flip to create the illusion of player climbing upwards
     """
     if world.player.y > 20:
-        if world.player.flip_x == False:
+        if world.player.flip_x is False:
             world.player.flip_x = True
-        elif world.player.flip_x == True:
+        elif world.player.flip_x is True:
             world.player.flip_x = False
         move_forward(world.player, 15, 90)
 
@@ -108,9 +109,9 @@ def move_down(world: World):
     """ Helper function that allows player to move down. Also makes player image flip to create the illusion of
     player climbing downwards
     """
-    if world.player.flip_x == False:
+    if world.player.flip_x is False:
         world.player.flip_x = True
-    elif world.player.flip_x == True:
+    elif world.player.flip_x is True:
         world.player.flip_x = False
     move_forward(world.player, 15, 270)
 
@@ -134,12 +135,14 @@ def create_heart() -> DesignerObject:
     heart.y = 0
     return heart
 
+
 def spawn_heart(world: World):
     """ Makes hearts appear on screen """
     if len(world.hearts) < HEART_LIMIT:
-        heart_chance = random.randint(1,200)
+        heart_chance = random.randint(1, 200)
         if heart_chance == 5:
             world.hearts.append(create_heart())
+
 
 def heart_out_of_bounds(world: World):
     """ Makes hearts disappear once they reach the bottom of the screen """
@@ -153,26 +156,30 @@ def update_heart_counter(world: World):
     """ Update the hearts """
     world.heart_counter.text = "Lives left: " + str(world.player_lives)
 
+
 def create_boulder() -> Boulder:
     """ Creates the boulder """
-    new_boulder = Boulder(emoji('🪨'), random.randint(5,10))
+    new_boulder = Boulder(emoji('🪨'), random.randint(5, 10))
 
     new_boulder.boulder_object.x = random.randint(0, get_width())
     new_boulder.boulder_object.y = get_height() * -1
     new_boulder.boulder_object.scale = (random.random() + 1)
     return new_boulder
 
+
 def spawn_boulders(world: World):
     """ Makes boulders appear on screen """
     not_too_many_boulders = len(world.boulders) < get_width()
-    random_spawning = random.randint(0,10) == 5
+    random_spawning = random.randint(0, 10) == 5
     if not_too_many_boulders and random_spawning:
         world.boulders.append(create_boulder())
+
 
 def drop_boulders(world: World):
     """ Makes boulders fall down the screen at varying speeds """
     for boulder in world.boulders:
         boulder.boulder_object.y += boulder.speed
+
 
 def boulder_out_of_bounds(world: World):
     """ Makes boulders disappear once at the bottom of the screen """
@@ -189,17 +196,20 @@ def player_is_hurt(world: World):
     world.player_lives -= 1
     update_lives(world)
 
+
 def invincible_function(world: World):
     """ Makes the player invincible and transparent for a short time after being hit by a boulder """
     world.invincible = True
     world.player.alpha = .5
 
 
-def is_invincible_timer_up(world:World):
+def is_invincible_timer_up(world: World):
     """ Helper function that tests if the player has been invincible for more than 1.5 seconds """
     if time.time() - world.invincible_timer > 1.5:
         world.invincible = False
         world.player.alpha = 1
+
+
 def boulder_collision(world: World):
     """ Makes boulder disappear after it collides with player """
     for boulder in world.boulders:
@@ -214,6 +224,7 @@ def update_lives(world: World):
     """ Updates player's lives """
     world.heart_counter.text = "Lives left: " + str(world.player_lives)
 
+
 def heart_collision(world: World):
     """ Makes heart disappear once it collides with player, and updates player's lives so long as
     they have less than 3 lives
@@ -227,15 +238,17 @@ def heart_collision(world: World):
                 update_lives(world)
 
 
-def create_game_over_screen(new_score : float) -> GameOverScreen:
+def create_game_over_screen(new_score: float) -> GameOverScreen:
     """Shows game over screen"""
     global high_score
     if new_score > high_score:
         high_score = new_score
-
-    return GameOverScreen(rectangle('black', get_width(), get_height()),text('yellow',"GAME OVER!!!", 100, get_width()/2, get_height()/2, font_name="Impact"),
-                          text('yellow',"Press Space to Play Again!", 50, get_width()/2, get_height()/1.5, font_name="Arial"),
-                          text('yellow',"High Score: " + str(high_score), 50, get_width()/2, get_height()/1.3, font_name="Arial"))
+    return GameOverScreen(rectangle('black', get_width(), get_height()),
+                          text('yellow', "GAME OVER!!!", 100, get_width()/2, get_height()/2, font_name="Impact"),
+                          text('yellow', "Press Space to Play Again!", 50, get_width()/2,
+                               get_height()/1.5, font_name="Arial"),
+                          text('yellow', "High Score: " + str(high_score), 50, get_width()/2,
+                               get_height()/1.3, font_name="Arial"))
 
 
 def no_player_lives(world: World):
@@ -244,11 +257,13 @@ def no_player_lives(world: World):
         new_score = (time.time() - world.game_start_time) // 1
         change_scene('game_over', new_score=new_score)
 
+
 def hits_bottom_screen(world: World):
     """ Creates game over screen once player reaches the bottom of the screen """
     if world.player.y >= get_height():
         new_score = (time.time() - world.game_start_time) // 1
         change_scene('game_over', new_score=new_score)
+
 
 def game_timer(world: World):
     """ Creates game timer """
@@ -260,13 +275,16 @@ def return_to_origin(world: World) -> World:
     """ Resets the background screen when the player reaches the top of the image """
     if world.background_image.y == 1000:
         world.background_image.y = -400
-        return World(world.background_image, world.player, world.boulders, world.hearts, world.player_lives, world.counter_box_outline,
-                 world.heart_counter, world.invincible, world.invincible_timer, world.elapsed_game_timer, world.game_start_time)
+        return World(world.background_image, world.player, world.boulders, world.hearts, world.player_lives,
+                     world.counter_box_outline, world.heart_counter, world.invincible, world.invincible_timer,
+                     world.elapsed_game_timer, world.game_start_time)
+
 
 def restart(key: str):
     """ Restarts the game after player loses if they press the space key """
     if key == "space":
         push_scene('game')
+
 
 when('starting: game', create_world)
 when('typing: game', player_move)
